@@ -23,10 +23,9 @@ public class MainActivity extends Activity {
 }*/
 
 
-import java.util.Calendar;
-
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -36,8 +35,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
-	Button parkButton;
-	Button findButton;
 	
 	LocationManager lm;
 	LocationListener listener;
@@ -46,28 +43,9 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_find);
+        setContentView(R.layout.activity_main);
         
-        parkButton = (Button)findViewById(R.id.imageButton1);
-        findButton = (Button)findViewById(R.id.imageButton2);
-        
-        parkButton.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				
-			}
-		});
-        
-        findButton.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-        
+
         lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
         listener = new LocationListener(){
 
@@ -97,17 +75,43 @@ public class MainActivity extends Activity {
 			}
         	
         };
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
+    }
+    public void onClick(View view){
+    	switch(view.getId()){
+    		case R.id.imagebutton1:
+    			handlePark();
+    			break;
+    		case R.id.imagebutton2:
+    			handleFind();
+    			break;
+    		
+    	}
+    	System.out.println(view.getId());
     }
     public void handlePark(){
-    	if(spot == null)
-    		spot = new ParkingSpot(new double[]{ currentSpot.getLatitude(),currentSpot.getLongitude()}
-    		,"spot");
-    	else
+    	if(spot == null){
+    		if(currentSpot != null)
+    			spot = new ParkingSpot(new double[]{ currentSpot.getLatitude(),currentSpot.getLongitude()}
+    			,"spot");
+    		else{
+    			Toast.makeText(this, "Please wait for GPS fix", Toast.LENGTH_LONG);
+    			return;
+    		}
+    	}else
     		spot.setLocation(currentSpot);
     	Toast.makeText(this, "You just parked!", Toast.LENGTH_LONG).show();
     	
     }
     public void handleFind(){
-    	
+    	if(spot != null){
+    		Intent i = new Intent(this,FindActivity.class);
+    		Bundle bundle = new Bundle();
+    		bundle.putDoubleArray("location", spot.getLocation());
+    		i.putExtras(bundle);
+    		startActivity(i);
+    	}else {
+    		Toast.makeText(this, "You need to park first!", Toast.LENGTH_LONG).show();
+    	}
     }
 }
