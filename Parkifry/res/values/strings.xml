@@ -3,9 +3,13 @@
 
     <string name="app_name">Parkifry</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
     <string name="park_description">Push to park car.</string>
     <string name="find_description">Push to find car.</string>
-	<color name="blue">#000838</color>
-	<color name="cream">#ffd999</color>
+
+    <color name="blue">#000838</color>
+    <color name="cream">#ffd999</color>
+
+    <string name="title_activity_find">FindActivity</string>
+    <string name="hello_world">Hello world!</string>
+
 </resources>
